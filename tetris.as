@@ -13,6 +13,7 @@
 		var s:int=0;														
 		var m:int=0;
 		var nombresArray:Array= new Array();
+		var cont:int=0;
 		
 		public function tetris() {
 			inicio_btn.addEventListener(MouseEvent.CLICK,Finicio);
@@ -23,6 +24,7 @@
 			dos_btn.addEventListener(MouseEvent.CLICK,Fdos);
 			jugar_btn.addEventListener(MouseEvent.CLICK,Fjugar);
 			dos_btn.enabled=false;
+			jugar_btn.visible=false;
 		}
 		function Funo(event:MouseEvent):void{
 			if (nombres_txt.text=="" || nombres_txt.text=="Ingresa nombre"){
@@ -43,14 +45,15 @@
 				trace(nombresArray);
 				dos_btn.visible=false;
 				nombres_txt.visible=false;
+				jugar_btn.visible=true;
 			}
 		}
 		function Fjugar(event:MouseEvent):void{
 			gotoAndPlay(3);
 			timer.start();														//el timer se inicia cuando
 			timer.addEventListener(TimerEvent.TIMER,Ftiempo);					//se entra al frame
+			nombre.text=String(nombresArray[cont]);
 		}
-		
 		function Ftiempo(tiempoevent:TimerEvent):void{							//funcion del timer
 			s++;																//se incrementan en 1 los s
 			tiempo_txt.text = "0" + m + ":" + 0 + s;							//tiempo en pantalla 
@@ -60,6 +63,15 @@
 			m++;																//minutos que se incrementan
 			s=0; }																//se inicializan los seg
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
