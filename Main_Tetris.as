@@ -13,6 +13,9 @@
 		var cont1:int=0;
 		var s:int=0;														//variables que se van a
 		var m:int=0;
+		var nombresArray:Array= new Array();
+		var cont:int=0;
+		
 		var select:int;
 		var limite:int = 0;
 		var speed:Timer = new Timer(100, limite);
@@ -61,13 +64,51 @@
 		
 		//Funcion Inicial
 		public function Main_Tetris() {
-			trace("s");
 			inicio_btn.addEventListener(MouseEvent.CLICK,Finicio);
 		}
 		
-		//F3, JUEGO
+		//F2, REGISTRO
 		private function Finicio(event:MouseEvent){
+			gotoAndPlay(2);
+			uno_btn.addEventListener(MouseEvent.CLICK,Funo);
+			dos_btn.addEventListener(MouseEvent.CLICK,Fdos);
+			jugar_btn.addEventListener(MouseEvent.CLICK,Fjugar);
+			dos_btn.enabled=false;
+			jugar_btn.visible=false;
+		}
+		
+		//Funciones de eleccion de numero de jugadores
+		//1 JUGADOR
+		function Funo(event:MouseEvent):void{
+			if (nombres_txt.text=="" || nombres_txt.text=="Ingresa nombre"){
+				nombres_txt.text="Ingresa nombre";
+			}else{
+				nombresArray.push(nombres_txt.text);
+				trace(nombresArray);
+				uno_btn.visible=false;
+				nombres_txt.text="";
+				dos_btn.enabled=true;
+			}
+		}
+		//2 JUGADORES
+		function Fdos(event:MouseEvent):void{
+			if (nombres_txt.text=="" || nombres_txt.text=="Ingresa nombre"){
+				nombres_txt.text="Ingresa nombre";
+			}else{
+				nombresArray.push(nombres_txt.text);
+				trace(nombresArray);
+				dos_btn.visible=false;
+				nombres_txt.visible=false;
+				jugar_btn.visible=true;
+			}
+		}
+		
+		//F3, JUEGO
+		function Fjugar(event:MouseEvent):void{
 			gotoAndPlay(3);
+			timer.start();														//el timer se inicia cuando
+			timer.addEventListener(TimerEvent.TIMER,Ftiempo);					//se entra al frame
+			nombre.text=String(nombresArray[cont]);
 			
 			creadorS.x = creador2.x;
 			creadorS.y = creador2.y;
@@ -76,16 +117,9 @@
 			Pieza();
 			
 			piece.addEventListener(MouseEvent.CLICK, Cambiar);
-			stage.addEventListener(Event.ENTER_FRAME, Reloj);
 		}
 		
 		//RELOJ DEL JUEGO
-		//Inicio del reloj
-		private function Reloj(event:Event){
-			timer.start();														//el timer se inicia cuando
-			timer.addEventListener(TimerEvent.TIMER,Ftiempo);					//se entra al frame
-		}
-		//Operacion del reloj
 		private function Ftiempo(tiempoevent:TimerEvent){
 																//utilizar para el timer
 			s++;																//se incrementan en 1 los s
