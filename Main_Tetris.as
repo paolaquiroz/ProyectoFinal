@@ -23,6 +23,7 @@
 		var creadorS:Sprite = new Sprite();
 		var atomo1:Atomo1;
 		var cuadro:Cuadro;
+		var pieza:Array = [];
 		var generador:Array = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -113,6 +114,7 @@
 			creadorS.x = creador2.x;
 			creadorS.y = creador2.y;
 			addChild(creadorS);
+			pieza.splice(0);
 			
 			Pieza();
 			
@@ -149,49 +151,49 @@
 						v2y = 1; v2x = 2;
 						v3y = 2; v3x = 2;
 						v4y = 2; v4x = 3;
-						limite = 22;
+						limite = 21;
 						break;
 						
 				case 2: v1y = 2; v1x = 5;
 						v2y = 2; v2x = 6;
 						v3y = 1; v3x = 6;
 						v4y = 0; v4x = 6;
-						limite = 22;
+						limite = 21;
 						break;
 						
 				case 3: v1y = 0; v1x = 8;
 						v2y = 0; v2x = 9;
 						v3y = 1; v3x = 8;
 						v4y = 1; v4x = 9;
-						limite = 23;
+						limite = 21;
 						break;
 						
 				case 4: v1y = 0; v1x = 11;
 						v2y = 1; v2x = 11;
 						v3y = 2; v3x = 11;
 						v4y = 3; v4x = 11;
-						limite = 23;
+						limite = 21;
 						break;
 						
 				case 5: v1y = 0; v1x = 13;
 						v2y = 1; v2x = 13;
 						v3y = 1; v3x = 14;
 						v4y = 2; v4x = 14;
-						limite = 22;
+						limite = 21;
 						break;
 						
 				case 6: v1y = 2; v1x = 16;
 						v2y = 1; v2x = 16;
 						v3y = 1; v3x = 17;
 						v4y = 0; v4x = 17;
-						limite = 22;
+						limite = 21;
 						break;
 						
 				case 7: v1y = 0; v1x = 19;
 						v2y = 1; v2x = 19;
 						v3y = 2; v3x = 19;
 						v4y = 1; v4x = 20;
-						limite = 22;
+						limite = 21;
 						break;
 			}
 			
@@ -265,10 +267,10 @@
 						generador[(v4y + indY) - 1][v4x] = 0;
 						break;
 			}
-			trace(indY);
+			trace((v1y + indY) + ", " + (v2y + indY) + ", " + (v3y + indY) + ", " + (v4y + indY));
 			
-			if(indY > 22 || indY > 21){
-				speed.stop();
+			if((v1y + indY) > 22 || (v2y + indY) > 22 || (v2y + indY) > 22 || (v2y + indY) > 22){
+				
 			}
 			
 			Dibujar();
