@@ -6,6 +6,7 @@
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
+	import flash.events.KeyboardEvent;
 	
 	public class Main_Tetris extends MovieClip{
 		//VARIABLES
@@ -51,6 +52,10 @@
 							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
 		var posX:Number;
 		var posY:Number;
+		//MOVIMIENTO Y GIRO
+		var izq:Boolean = false;
+		var der:Boolean = false;
+		var giro:int = 0;
 		//CAIDA
 		var indX:int = 0;
 		var indY:int = 0;
@@ -79,7 +84,7 @@
 		}
 		
 		//Funciones de eleccion de numero de jugadores
-		//1 JUGADOR
+		//1° JUGADOR
 		function Funo(event:MouseEvent):void{
 			if (nombres_txt.text=="" || nombres_txt.text=="Ingresa nombre"){
 				nombres_txt.text="Ingresa nombre";
@@ -91,7 +96,7 @@
 				dos_btn.enabled=true;
 			}
 		}
-		//2 JUGADORES
+		//2° JUGADORES
 		function Fdos(event:MouseEvent):void{
 			if (nombres_txt.text=="" || nombres_txt.text=="Ingresa nombre"){
 				nombres_txt.text="Ingresa nombre";
@@ -119,6 +124,9 @@
 			Pieza();
 			
 			piece.addEventListener(MouseEvent.CLICK, Cambiar);
+			stage.addEventListener(Event.ENTER_FRAME, Movimeinto);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, Presionar);
+			stage.addEventListener(KeyboardEvent.KEY_UP, Soltar);
 		}
 		
 		//RELOJ DEL JUEGO
@@ -136,8 +144,8 @@
 		//FUNCION TEMPORAL
 		private function Cambiar(event:MouseEvent){
 			Pieza();
+			indX = 0;
 			indY = 0;
-			trace(indY);
 		}
 		
 		//GENERADOR DE PIEZAS
@@ -147,52 +155,52 @@
 			
 			//En base al numero, generar la pieza correspondiente
 			switch(select){
-				case 1: v1y = 0; v1x = 2;
-						v2y = 1; v2x = 2;
-						v3y = 2; v3x = 2;
-						v4y = 2; v4x = 3;
+				case 1: v1y = 0; v1x = 10;
+						v2y = 1; v2x = 10;
+						v3y = 2; v3x = 10;
+						v4y = 2; v4x = 11;
 						limite = 21;
 						break;
 						
-				case 2: v1y = 2; v1x = 5;
-						v2y = 2; v2x = 6;
-						v3y = 1; v3x = 6;
-						v4y = 0; v4x = 6;
+				case 2: v1y = 2; v1x = 10;
+						v2y = 2; v2x = 11;
+						v3y = 1; v3x = 11;
+						v4y = 0; v4x = 11;
 						limite = 21;
 						break;
 						
-				case 3: v1y = 0; v1x = 8;
-						v2y = 0; v2x = 9;
-						v3y = 1; v3x = 8;
-						v4y = 1; v4x = 9;
+				case 3: v1y = 0; v1x = 10;
+						v2y = 0; v2x = 11;
+						v3y = 1; v3x = 10;
+						v4y = 1; v4x = 11;
 						limite = 21;
 						break;
 						
-				case 4: v1y = 0; v1x = 11;
-						v2y = 1; v2x = 11;
-						v3y = 2; v3x = 11;
-						v4y = 3; v4x = 11;
+				case 4: v1y = 0; v1x = 10;
+						v2y = 1; v2x = 10;
+						v3y = 2; v3x = 10;
+						v4y = 3; v4x = 10;
 						limite = 21;
 						break;
 						
-				case 5: v1y = 0; v1x = 13;
-						v2y = 1; v2x = 13;
-						v3y = 1; v3x = 14;
-						v4y = 2; v4x = 14;
+				case 5: v1y = 0; v1x = 10;
+						v2y = 1; v2x = 10;
+						v3y = 1; v3x = 11;
+						v4y = 2; v4x = 11;
 						limite = 21;
 						break;
 						
-				case 6: v1y = 2; v1x = 16;
-						v2y = 1; v2x = 16;
-						v3y = 1; v3x = 17;
-						v4y = 0; v4x = 17;
+				case 6: v1y = 2; v1x = 10;
+						v2y = 1; v2x = 10;
+						v3y = 1; v3x = 11;
+						v4y = 0; v4x = 11;
 						limite = 21;
 						break;
 						
-				case 7: v1y = 0; v1x = 19;
-						v2y = 1; v2x = 19;
-						v3y = 2; v3x = 19;
-						v4y = 1; v4x = 20;
+				case 7: v1y = 0; v1x = 10;
+						v2y = 1; v2x = 10;
+						v3y = 2; v3x = 10;
+						v4y = 1; v4x = 11;
 						limite = 21;
 						break;
 			}
@@ -202,6 +210,7 @@
 			generador[v3y][v3x] = 1;
 			generador[v4y][v4x] = 1;
 			
+			indX = 0;
 			Dibujar();
 		}
 		
@@ -223,6 +232,8 @@
 						creadorS.addChild(atomo1);
 					}
 					else{
+						//La carga de este cuadro provoca un aumento de rendimiento 
+						//Se debe buscar un reemplazo para eliminar el rastro del movimiento
 						cuadro.x = (posX * 20);
 						cuadro.y = (posY * 20);
 						creadorS.addChild(cuadro);
@@ -237,43 +248,105 @@
 			
 		}
 		
+		//MOVIMIENTO DE LA PIEZA
+		private function Presionar(event:KeyboardEvent){
+			//Determinar la tecla izquierda: ASCII no. 37
+			if(event.keyCode == 37){
+				//Esta presionado
+				izq = true;
+			}
+			else{
+				//Determinar la tecla derecha: ASCII no. 39
+				if(event.keyCode == 39){
+					der = true;
+				}
+			}
+		}
+		
+		private function Soltar(event:KeyboardEvent){
+			//Determinar la tecla izquierda: ASCII no. 37
+			if(event.keyCode == 37){
+				//Esta presionado
+				izq = false;
+			}
+			else{
+				//Determinar la tecla derecha: ASCII no. 39
+				if(event.keyCode == 39){
+					der = false;
+				}
+			}
+		}
+		//Funcion de Movimiento
+		private function Movimeinto(event:Event){
+			if(izq == true && indX > -10){
+				indX--;
+			}
+			if(der == true && indX < 10){
+				indX++;
+			}
+		}
+		
 		//CAIDA DE LAS PIEZAS
 		private function Caida(event:TimerEvent){
 			indY++;
-			generador[v1y + indY][v1x] = 1;
-			generador[v2y + indY][v2x] = 1;
-			generador[v3y + indY][v3x] = 1;
-			generador[v4y + indY][v4x] = 1;
 			
-			switch(select){
-				case 1: generador[(v1y + indY) - 1][v1x] = 0;
-						generador[(v4y + indY) - 1][v4x] = 0;
-						break;
-				case 2: generador[(v1y + indY) - 1][v1x] = 0;
-						generador[(v4y + indY) - 1][v4x] = 0;
-						break;
-				case 3: generador[(v1y + indY) - 1][v1x] = 0;
-						generador[(v2y + indY) - 1][v2x] = 0;
-						break;
-				case 4: generador[(v1y + indY) - 1][v1x] = 0;
-						break;
-				case 5: generador[(v1y + indY) - 1][v1x] = 0;
-						generador[(v3y + indY) - 1][v3x] = 0;
-						break;
-				case 6: generador[(v2y + indY) - 1][v2x] = 0;
-						generador[(v4y + indY) - 1][v4x] = 0;
-						break;
-				case 7: generador[(v1y + indY) - 1][v1x] = 0;
-						generador[(v4y + indY) - 1][v4x] = 0;
-						break;
+			Actualizar();
+			
+			generador[v1y + indY][v1x + indX] = 1;
+			generador[v2y + indY][v2x + indX] = 1;
+			generador[v3y + indY][v3x + indX] = 1;
+			generador[v4y + indY][v4x + indX] = 1;
+			
+			if((v1y + indY) > 23){
+				speed.stop();
+				indY = 0;
 			}
-			trace((v1y + indY) + ", " + (v2y + indY) + ", " + (v3y + indY) + ", " + (v4y + indY));
-			
-			if((v1y + indY) > 22 || (v2y + indY) > 22 || (v2y + indY) > 22 || (v2y + indY) > 22){
-				
+			else if((v2y + indY) > 23){
+				speed.stop();
+				indY = 0;
+			}
+			else if((v3y + indY) > 23){
+				speed.stop();
+				indY = 0;
+			}
+			else{
+				if((v4y + indY) > 23){
+					speed.stop();
+					indY = 0;
+				}
 			}
 			
 			Dibujar();
+		}
+		
+		//ACTUALIZAR EL ESCENARIO
+		//Se reincia la matriz antes de cargar nuevos valores
+		private function Actualizar(){
+			 generador = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
 		}
 		
 		//GENERADOR DE FISICA DEL JUEGO
