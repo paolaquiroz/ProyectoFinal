@@ -19,7 +19,7 @@
 		//PRINCIPALES
 		var select:int;
 		var limite:int = 0;
-		var speed:Timer = new Timer(100, 24);
+		var speed:Timer = new Timer(100, limite);
 		//PIEZAS
 		var creadorS:Sprite = new Sprite();
 		var atomoM:DisplayObject;
@@ -136,7 +136,7 @@
 			nombre.text=String(nombresArray[cont]);
 			
 			//Crear el Sprite del escenario
-			creadorS.graphics.drawRect(0, 0, 300, 400);
+			creadorS.graphics.drawRect(0, 0, 300, 500);
 			addChild(creadorS);
 			
 			//Iniciar creacion de la pieza
@@ -162,7 +162,6 @@
 			nombres_txt.visible=true;
 			nombresArray.length=0;
 			nombres_txt.text="";
-			
 		}
 		
 		//RELOJ DEL JUEGO
@@ -180,12 +179,6 @@
 		//FUNCION TEMPORAL
 		private function Cambiar(event:MouseEvent){
 			Pieza();
-			numPiezas++;
-			indX = 0;
-			indY = 0;
-			ind = 0;
-			
-			Dibujar();
 		}
 		
 		//GENERADOR DE PIEZAS
@@ -199,14 +192,14 @@
 						v2y = 1; v2x = 7;
 						v3y = 2; v3x = 7;
 						v4y = 2; v4x = 8;
-						limite = 22;
-						break;   
+						limite = 21;
+						break;
 						
 				case 2: v1y = 2; v1x = 7;
 						v2y = 2; v2x = 8;
 						v3y = 1; v3x = 8;
 						v4y = 0; v4x = 8;
-						limite = 22;
+						limite = 21;
 						break;
 						
 				case 3: v1y = 0; v1x = 7;
@@ -220,28 +213,28 @@
 						v2y = 1; v2x = 7;
 						v3y = 2; v3x = 7;
 						v4y = 3; v4x = 7;
-						limite = 23;
+						limite = 20;
 						break;
 						
 				case 5: v1y = 0; v1x = 7;
 						v2y = 1; v2x = 7;
 						v3y = 1; v3x = 8;
 						v4y = 2; v4x = 8;
-						limite = 22;
+						limite = 21;
 						break;
 						
 				case 6: v1y = 2; v1x = 7;
 						v2y = 1; v2x = 7;
 						v3y = 1; v3x = 8;
 						v4y = 0; v4x = 8;
-						limite = 22;
+						limite = 21;
 						break;
 						
 				case 7: v1y = 0; v1x = 7;
 						v2y = 1; v2x = 7;
 						v3y = 2; v3x = 7;
 						v4y = 1; v4x = 8;
-						limite = 22;
+						limite = 21;
 						break;
 			}
 			
@@ -251,6 +244,7 @@
 			generador[v4y][v4x] = 1;
 			
 			indX = 0;
+			indY = 0;
 			Dibujar();
 		}
 		
@@ -375,15 +369,16 @@
 			}
 			
 			if(indY > limite){
+				/*
+				f1y = creadorS.getChildAt(0).y;
+				f2y = creadorS.getChildAt(1).y;
+				f3y = creadorS.getChildAt(2).y;
+				f4y = creadorS.getChildAt(3).y;*/
 				
-				f1y = creadorS.getChildAt(0).y;;
-				f2y = creadorS.getChildAt(1).y;;
-				f3y = creadorS.getChildAt(2).y;;
-				f4y = creadorS.getChildAt(3).y;
-				
-				for(var re:int = 0; re < 4; re++){
+				//for(var re:int = 0; re < 4; re++){
+					//Pieza();
 					speed.stop();
-				}
+				//}
 			}
 		}
 		
