@@ -79,8 +79,13 @@
 			uno_btn.addEventListener(MouseEvent.CLICK,Funo);
 			dos_btn.addEventListener(MouseEvent.CLICK,Fdos);
 			jugar_btn.addEventListener(MouseEvent.CLICK,Fjugar);
+			regresar_btn.addEventListener(MouseEvent.CLICK,Fregresar);
 			dos_btn.enabled=false;
 			jugar_btn.visible=false;
+			regresar_btn.visible=false;
+			jugadores.visible=false;
+			j1.visible=false;
+			j2.visible=false;
 		}
 		
 		//Funciones de eleccion de numero de jugadores
@@ -106,6 +111,13 @@
 				dos_btn.visible=false;
 				nombres_txt.visible=false;
 				jugar_btn.visible=true;
+				regresar_btn.visible=true;
+				ingresa.visible=false;
+				jugadores.visible=true;
+				j1.visible=true;
+				j2.visible=true;
+				j1.text=String(nombresArray[0]);
+				j2.text=String(nombresArray[1]);
 			}
 		}
 		
@@ -116,8 +128,8 @@
 			timer.addEventListener(TimerEvent.TIMER,Ftiempo);					//se entra al frame
 			nombre.text=String(nombresArray[cont]);
 			
-			creadorS.x = creador2.x;
-			creadorS.y = creador2.y;
+			creadorS.x = 0//creador2.x;
+			creadorS.y = 0//creador2.y;
 			addChild(creadorS);
 			pieza.splice(0);
 			
@@ -127,6 +139,22 @@
 			stage.addEventListener(Event.ENTER_FRAME, Movimeinto);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, Presionar);
 			stage.addEventListener(KeyboardEvent.KEY_UP, Soltar);
+		}
+		function Fregresar (event:MouseEvent):void{
+			jugadores.visible=false;
+			j1.text="";
+			j2.text="";
+			j1.visible=false;
+			j2.visible=false;
+			regresar_btn.visible=false;
+			jugar_btn.visible=false;
+			uno_btn.visible=true;
+			dos_btn.visible=true;
+			ingresa.visible=true;
+			nombres_txt.visible=true;
+			nombresArray.length=0;
+			nombres_txt.text="";
+			
 		}
 		
 		//RELOJ DEL JUEGO
