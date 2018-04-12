@@ -19,7 +19,7 @@
 		//PRINCIPALES
 		var select:int;
 		var limite:int = 0;
-		var speed:Timer = new Timer(100, limite);
+		var speed:Timer = new Timer(500, limite);
 		var f1y:int;
 		var f2y:int;
 		var f3y:int;
@@ -29,32 +29,6 @@
 		var f3x:int;
 		var f4x:int;
 		var generador:Array = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
-							   
-		var actualMat:Array = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -92,7 +66,7 @@
 		var arr:Boolean = false;
 		var giro:int = 0;
 		//CAIDA
-		var numPiezas:int = 0;
+		var numPiezas:int = 1;
 		var ind:int = 0;
 		var control:int = 0;
 		var indX:int = 0;
@@ -177,6 +151,7 @@
 			stage.addEventListener(Event.ENTER_FRAME, Movimeinto);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, Presionar);
 			stage.addEventListener(KeyboardEvent.KEY_UP, Soltar);
+			stage.addEventListener(Event.ENTER_FRAME, Fisica);
 		}
 		
 		function Fregresar (event:MouseEvent):void{
@@ -211,6 +186,7 @@
 		private function Pieza(){
 			//Generar un numero aleatorio
 			select = Math.random() * 7 + 1;
+			trace("seleccion: " + select);
 			
 			//En base al numero, generar la pieza correspondiente
 			switch(select){
@@ -235,10 +211,10 @@
 						limite = 22;
 						break;
 						
-				case 4: v1y = 0; v1x = 7;
-						v2y = 1; v2x = 7;
-						v3y = 2; v3x = 7;
-						v4y = 3; v4x = 7;
+				case 4: v1y = 0; v1x = 8;
+						v2y = 1; v2x = 8;
+						v3y = 2; v3x = 8;
+						v4y = 3; v4x = 8;
 						limite = 20;
 						break;
 						
@@ -264,6 +240,20 @@
 						break;
 			}
 			
+			if(numPiezas > 1){
+				//Se dibuja la figura en la matriz, en base en donde cayo
+				generador[f1y][f1x] = 1;
+				generador[f2y][f2x] = 1;
+				generador[f3y][f3x] = 1;
+				generador[f4y][f4x] = 1;
+				
+				//Muestra la matriz en consola
+				for(var ed:int = 0; ed < 25; ed++){
+					trace(generador[ed]);
+				}
+				trace("\n");
+			}
+			
 			generador[v1y][v1x] = 1;
 			generador[v2y][v2x] = 1;
 			generador[v3y][v3x] = 1;
@@ -271,6 +261,8 @@
 			
 			indX = 0;
 			indY = 0;
+			block = false;
+			
 			Dibujar();
 		}
 		
@@ -281,7 +273,7 @@
 			ind = 0;
 			
 			//LEER FILAS
-			for(var a:int = 0; a < 20; a++){
+			for(var a:int = 0; a < 25; a++){
 				//LEER COLUMNAS
 				for(var b:int = 0; b < 15; b++){
 					
@@ -301,7 +293,6 @@
 						creadorS.addChildAt(atomoM, ind);
 						ind++;
 					}
-					
 					
 					posX++;
 				}
@@ -354,14 +345,14 @@
 		
 		//Funcion de Movimiento
 		private function Movimeinto(event:Event){
-			if(izq == true && indX > -7){
+			if(izq == true && indX > -7 && block == false){
 				indX--;
 				
 				for(control = 0; control < 4; control++){
 					creadorS.getChildAt(control).x -= 20;
 				}
 			}
-			if(der == true && indX < 6){
+			if(der == true && indX < 6 && block == false){
 				indX++;
 				
 				for(control = 0; control < 4; control++){
@@ -374,7 +365,7 @@
 			}
 		}
 		
-		var bStop:Boolean = false;
+		var block:Boolean = false;
 		
 		//CAIDA DE LAS PIEZAS
 		private function Caida(event:TimerEvent){
@@ -385,77 +376,173 @@
 				creadorS.getChildAt(control).y += 20;
 			}
 			
-			if(generador[(creadorS.getChildAt(0).y / 20) + 1] == 1){
-					trace("s1");
-					bStop = true;
-			}
-			if(generador[(creadorS.getChildAt(1).y / 20) + 1] == 1){
-					trace("s2");
-					bStop = true;
-			}
-			if(generador[(creadorS.getChildAt(2).y / 20) + 1] == 1){
-					trace("s3");
-					bStop = true;
-			}
-			if(generador[(creadorS.getChildAt(3).y / 20) + 1] == 1){
-					trace("s4");
-					bStop = true;
-			}
-			
 			//Una pieza ha llegado a la base del escenario
-			if(indY > limite || bStop == true){
-				//Se toman las coordenadas en donde cayo la pieza para ubicarla en la matriz
-				//Ubicacion en Y - fila
-				f1y = creadorS.getChildAt(0).y / 20;
-				f2y = creadorS.getChildAt(1).y / 20;
-				f3y = creadorS.getChildAt(2).y / 20;
-				f4y = creadorS.getChildAt(3).y / 20;
-				//Ubicacion en X - columna
-				f1x = creadorS.getChildAt(0).x / 20;
-				f2x = creadorS.getChildAt(1).x / 20;
-				f3x = creadorS.getChildAt(2).x / 20;
-				f4x = creadorS.getChildAt(3).x / 20;
-				
-				//Se detiene la caida y se actualiza la matriz
-				speed.stop();
-				ActualizarMatriz();
+			if(indY > limite){
+				Detener();
 			}
+		}
+		
+		private function Detener(){
+			//Se toman las coordenadas en donde cayo la pieza para ubicarla en la matriz
+			//Ubicacion en Y - fila
+			f1y = creadorS.getChildAt(0).y / 20;
+			f2y = creadorS.getChildAt(1).y / 20;
+			f3y = creadorS.getChildAt(2).y / 20;
+			f4y = creadorS.getChildAt(3).y / 20;
+			//Ubicacion en X - columna
+			f1x = creadorS.getChildAt(0).x / 20;
+			f2x = creadorS.getChildAt(1).x / 20;
+			f3x = creadorS.getChildAt(2).x / 20;
+			f4x = creadorS.getChildAt(3).x / 20;
+				
+			//Se detiene la caida y se actualiza la matriz
+			speed.stop();
+			ActualizarMatriz();
 		}
 		
 		//Funcion para actualizar la matriz y eliminar sobrnates
 		private function ActualizarMatriz(){
 			//Se eliminan 1 sobrantes en la parte superior de la matriz
-			for(var er:int = 0; er < 4; er++){
+			for(var er:int = 0; er < 5; er++){
 				for(var rr:int = 0; rr < 15; rr++){
 					generador[er][rr] = 0;
 				}
 			}
 			
-			//Muestra la matriz en consola
-			for(var es:int = 0; es < 25; es++){
-				trace(generador[ed]);
-			}
-			trace("\n");
-			
-			//Se dibuja la figura en la matriz, en base en donde cayo
-			actualMat[f1y][f1x] = 1;
-			actualMat[f2y][f2x] = 1;
-			actualMat[f3y][f3x] = 1;
-			actualMat[f4y][f4x] = 1;
-			
-			//Muestra la matriz en consola
-			for(var ed:int = 0; ed < 25; ed++){
-				trace(actualMat[ed]);
-			}
-			trace("\n");
+			numPiezas++;
+			trace("Pieza:" + numPiezas);
 			
 			//Se reinicia el proceso de la pieza
+			var delay:Timer = new Timer(200, 1);
+			delay.start();
+			delay.addEventListener(TimerEvent.TIMER_COMPLETE, Continuar);
+		}
+		
+		private function Continuar(event:TimerEvent){
 			Pieza();
 		}
 		
 		//GENERADOR DE FISICA DEL JUEGO
 		private function Fisica(event:Event){
+			//v1
+			var lectura1Y:Number = Number((creadorS.getChildAt(0).y / 20) + 1);
+			var lectura1X:Number = Number((creadorS.getChildAt(0).x / 20));
 			
+			var fisica1Y:Number = Number((creadorS.getChildAt(0).y / 20));
+			var der1X:Number = Number((creadorS.getChildAt(0).x / 20) + 1);
+			var izq1X:Number = Number((creadorS.getChildAt(0).x / 20) - 1);
+			//v2
+			var lectura2Y:Number = Number((creadorS.getChildAt(1).y / 20) + 1);
+			var lectura2X:Number = Number((creadorS.getChildAt(1).x / 20));
+			
+			var fisica2Y:Number = Number((creadorS.getChildAt(1).y / 20));
+			var der2X:Number = Number((creadorS.getChildAt(1).x / 20) + 1);
+			var izq2X:Number = Number((creadorS.getChildAt(1).x / 20) - 1);
+			//v3
+			var lectura3Y:Number = Number((creadorS.getChildAt(2).y / 20) + 1);
+			var lectura3X:Number = Number((creadorS.getChildAt(2).x / 20));
+			
+			var fisica3Y:Number = Number((creadorS.getChildAt(2).y / 20));
+			var der3X:Number = Number((creadorS.getChildAt(2).x / 20) + 1);
+			var izq3X:Number = Number((creadorS.getChildAt(2).x / 20) - 1);
+			//v4
+			var lectura4Y:Number = Number((creadorS.getChildAt(3).y / 20) + 1);
+			var lectura4X:Number = Number((creadorS.getChildAt(3).x / 20));
+			
+			var fisica4Y:Number = Number((creadorS.getChildAt(3).y / 20));
+			var der4X:Number = Number((creadorS.getChildAt(3).x / 20) + 1);
+			var izq4X:Number = Number((creadorS.getChildAt(3).x / 20) - 1);
+			
+			//trace("v1: " + der1X + ", v2: " + der2X + ", v3: " + der3X + ", v4: " + der4X);
+			//trace("v1: " + fisica1Y + ", v2: " + fisica2Y + ", v3: " + fisica3Y + ", v4: " + fisica4Y);
+			
+			if(numPiezas > 1){
+				switch(select){
+					case 1: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+						Detener();
+					}
+					
+					if(generador[fisica1Y][der1X] == 1 || generador[fisica2Y][der2X] == 1 || generador[fisica3Y][der3X] == 1){
+						block = true;
+					}
+					else{
+						block = false;
+					}
+					break;
+					
+					case 2: if(generador[lectura1Y][lectura1X] == 1 || generador[lectura2Y][lectura2X] == 1){
+						Detener();
+					}
+					
+					if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
+						block = true;
+					}
+					else{
+						block = false;
+					}
+					break;
+					
+					case 3: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+						Detener();
+					}
+					
+					if(generador[fisica2Y][der2X] == 1 || generador[fisica4Y][der4X] == 1){
+						block = true;
+					}
+					else{
+						block = false;
+					}
+					break;
+					
+					case 4: if(generador[lectura4Y][lectura4X] == 1){
+						Detener();
+					}
+					
+					if(generador[fisica1Y][der1X] == 1 || generador[fisica2Y][der2X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
+						block = true;
+					}
+					else{
+						block = false;
+					}
+					break;
+					
+					case 5: if(generador[lectura2Y][lectura2X] == 1 || generador[lectura4Y][lectura4X] == 1){
+						Detener();
+					}
+					
+					if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
+						block = true;
+					}
+					else{
+						block = false;
+					}
+					break;
+					
+					case 6: if(generador[lectura1Y][lectura1X] == 1 || generador[lectura3Y][lectura3X] == 1){
+						Detener();
+					}
+					
+					if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
+						block = true;
+					}
+					else{
+						block = false;
+					}
+					break;
+					
+					case 7: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+						Detener();
+					}
+					
+					if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
+						block = true;
+					}
+					else{
+						block = false;
+					}
+					break;
+				}
+			}
 		}
 	}
 }
