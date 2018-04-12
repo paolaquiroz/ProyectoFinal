@@ -16,47 +16,85 @@
 		var m:int=0;
 		var nombresArray:Array= new Array();
 		var cont:int=0;
-		
+		//PRINCIPALES
 		var select:int;
 		var limite:int = 0;
 		var speed:Timer = new Timer(100, limite);
+		var f1y:int;
+		var f2y:int;
+		var f3y:int;
+		var f4y:int;
+		var f1x:int;
+		var f2x:int;
+		var f3x:int;
+		var f4x:int;
+		var generador:Array = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
+							   
+		var actualMat:Array = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
 		//PIEZAS
 		var creadorS:Sprite = new Sprite();
+		var atomoM:DisplayObject;
 		var atomo1:Atomo1;
-		var cuadro:Cuadro;
-		var pieza:Array = [];
-		var generador:Array = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-							   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
+		var atomo2:Atomo2;
 		var posX:Number;
 		var posY:Number;
 		//MOVIMIENTO Y GIRO
 		var izq:Boolean = false;
 		var der:Boolean = false;
+		var arr:Boolean = false;
 		var giro:int = 0;
 		//CAIDA
+		var numPiezas:int = 0;
+		var ind:int = 0;
+		var control:int = 0;
 		var indX:int = 0;
 		var indY:int = 0;
 		var v1y:int;
@@ -123,23 +161,24 @@
 		
 		//F3, JUEGO
 		function Fjugar(event:MouseEvent):void{
+			//Iniciar el tiempo del juego
 			gotoAndPlay(3);
 			timer.start();														//el timer se inicia cuando
 			timer.addEventListener(TimerEvent.TIMER,Ftiempo);					//se entra al frame
 			nombre.text=String(nombresArray[cont]);
 			
-			creadorS.x = 0//creador2.x;
-			creadorS.y = 0//creador2.y;
+			//Crear el Sprite del escenario
+			creadorS.graphics.drawRect(0, 0, 300, 500);
 			addChild(creadorS);
-			pieza.splice(0);
 			
+			//Iniciar creacion de la pieza
 			Pieza();
 			
-			piece.addEventListener(MouseEvent.CLICK, Cambiar);
 			stage.addEventListener(Event.ENTER_FRAME, Movimeinto);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, Presionar);
 			stage.addEventListener(KeyboardEvent.KEY_UP, Soltar);
 		}
+		
 		function Fregresar (event:MouseEvent):void{
 			jugadores.visible=false;
 			j1.text="";
@@ -154,7 +193,6 @@
 			nombres_txt.visible=true;
 			nombresArray.length=0;
 			nombres_txt.text="";
-			
 		}
 		
 		//RELOJ DEL JUEGO
@@ -169,13 +207,6 @@
 			s=0; }																//se inicializan los seg
 		}
 		
-		//FUNCION TEMPORAL
-		private function Cambiar(event:MouseEvent){
-			Pieza();
-			indX = 0;
-			indY = 0;
-		}
-		
 		//GENERADOR DE PIEZAS
 		private function Pieza(){
 			//Generar un numero aleatorio
@@ -183,52 +214,52 @@
 			
 			//En base al numero, generar la pieza correspondiente
 			switch(select){
-				case 1: v1y = 0; v1x = 10;
-						v2y = 1; v2x = 10;
-						v3y = 2; v3x = 10;
-						v4y = 2; v4x = 11;
+				case 1: v1y = 0; v1x = 7;
+						v2y = 1; v2x = 7;
+						v3y = 2; v3x = 7;
+						v4y = 2; v4x = 8;
 						limite = 21;
 						break;
 						
-				case 2: v1y = 2; v1x = 10;
-						v2y = 2; v2x = 11;
-						v3y = 1; v3x = 11;
-						v4y = 0; v4x = 11;
+				case 2: v1y = 2; v1x = 7;
+						v2y = 2; v2x = 8;
+						v3y = 1; v3x = 8;
+						v4y = 0; v4x = 8;
 						limite = 21;
 						break;
 						
-				case 3: v1y = 0; v1x = 10;
-						v2y = 0; v2x = 11;
-						v3y = 1; v3x = 10;
-						v4y = 1; v4x = 11;
+				case 3: v1y = 0; v1x = 7;
+						v2y = 0; v2x = 8;
+						v3y = 1; v3x = 7;
+						v4y = 1; v4x = 8;
+						limite = 22;
+						break;
+						
+				case 4: v1y = 0; v1x = 7;
+						v2y = 1; v2x = 7;
+						v3y = 2; v3x = 7;
+						v4y = 3; v4x = 7;
+						limite = 20;
+						break;
+						
+				case 5: v1y = 0; v1x = 7;
+						v2y = 1; v2x = 7;
+						v3y = 1; v3x = 8;
+						v4y = 2; v4x = 8;
 						limite = 21;
 						break;
 						
-				case 4: v1y = 0; v1x = 10;
-						v2y = 1; v2x = 10;
-						v3y = 2; v3x = 10;
-						v4y = 3; v4x = 10;
+				case 6: v1y = 2; v1x = 7;
+						v2y = 1; v2x = 7;
+						v3y = 1; v3x = 8;
+						v4y = 0; v4x = 8;
 						limite = 21;
 						break;
 						
-				case 5: v1y = 0; v1x = 10;
-						v2y = 1; v2x = 10;
-						v3y = 1; v3x = 11;
-						v4y = 2; v4x = 11;
-						limite = 21;
-						break;
-						
-				case 6: v1y = 2; v1x = 10;
-						v2y = 1; v2x = 10;
-						v3y = 1; v3x = 11;
-						v4y = 0; v4x = 11;
-						limite = 21;
-						break;
-						
-				case 7: v1y = 0; v1x = 10;
-						v2y = 1; v2x = 10;
-						v3y = 2; v3x = 10;
-						v4y = 1; v4x = 11;
+				case 7: v1y = 0; v1x = 7;
+						v2y = 1; v2x = 7;
+						v3y = 2; v3x = 7;
+						v4y = 1; v4x = 8;
 						limite = 21;
 						break;
 			}
@@ -239,6 +270,7 @@
 			generador[v4y][v4x] = 1;
 			
 			indX = 0;
+			indY = 0;
 			Dibujar();
 		}
 		
@@ -246,26 +278,31 @@
 		private function Dibujar(){
 			posX = 0;
 			posY = 0;
+			ind = 0;
 			
 			//LEER FILAS
-			for(var a:int = 0; a < 25; a++){
+			for(var a:int = 0; a < 20; a++){
 				//LEER COLUMNAS
-				for(var b:int = 0; b < 22; b++){
-					cuadro = new Cuadro;
-					atomo1 = new Atomo1;
-					//DIBUJAR SOBRE EL ESCENARIO
-					if(generador[a][b] == 1){
-						atomo1.x = (posX * 20);
-						atomo1.y = (posY * 20);
-						creadorS.addChild(atomo1);
+				for(var b:int = 0; b < 15; b++){
+					
+					//Seleccion del color de la pieza
+					if(select == 1 || select == 3 || select == 5 || select == 7){
+						atomoM = atomo1 = new Atomo1;
 					}
 					else{
-						//La carga de este cuadro provoca un aumento de rendimiento 
-						//Se debe buscar un reemplazo para eliminar el rastro del movimiento
-						cuadro.x = (posX * 20);
-						cuadro.y = (posY * 20);
-						creadorS.addChild(cuadro);
+						atomoM = atomo2 = new Atomo2;
 					}
+					
+					//DIBUJAR SOBRE EL ESCENARIO
+					if(generador[a][b] == 1){
+						atomoM.x = (posX * 20);
+						atomoM.y = (posY * 20);
+						creadorS.addChild(atomoM);
+						creadorS.addChildAt(atomoM, ind);
+						ind++;
+					}
+					
+					
 					posX++;
 				}
 				posX = 0;
@@ -288,6 +325,11 @@
 				if(event.keyCode == 39){
 					der = true;
 				}
+				else{
+					if(event.keyCode == 38){
+						arr = true;
+					}
+				}
 			}
 		}
 		
@@ -302,79 +344,113 @@
 				if(event.keyCode == 39){
 					der = false;
 				}
+				else{
+					if(event.keyCode == 38){
+						arr = false;
+					}
+				}
 			}
 		}
+		
 		//Funcion de Movimiento
 		private function Movimeinto(event:Event){
-			if(izq == true && indX > -10){
+			if(izq == true && indX > -7){
 				indX--;
+				
+				for(control = 0; control < 4; control++){
+					creadorS.getChildAt(control).x -= 20;
+				}
 			}
-			if(der == true && indX < 10){
+			if(der == true && indX < 6){
 				indX++;
+				
+				for(control = 0; control < 4; control++){
+					creadorS.getChildAt(control).x += 20;
+				}
+			}
+			
+			if(arr == true){
+				
 			}
 		}
+		
+		var bStop:Boolean = false;
 		
 		//CAIDA DE LAS PIEZAS
 		private function Caida(event:TimerEvent){
 			indY++;
 			
-			Actualizar();
+			//Se mueve cada cuadro al mismo tiempo 20 pixeles, imitando el movimiento a traves de la matriz
+			for(control = 0; control < 4; control++){
+				creadorS.getChildAt(control).y += 20;
+			}
 			
-			generador[v1y + indY][v1x + indX] = 1;
-			generador[v2y + indY][v2x + indX] = 1;
-			generador[v3y + indY][v3x + indX] = 1;
-			generador[v4y + indY][v4x + indX] = 1;
+			if(generador[(creadorS.getChildAt(0).y / 20) + 1] == 1){
+					trace("s1");
+					bStop = true;
+			}
+			if(generador[(creadorS.getChildAt(1).y / 20) + 1] == 1){
+					trace("s2");
+					bStop = true;
+			}
+			if(generador[(creadorS.getChildAt(2).y / 20) + 1] == 1){
+					trace("s3");
+					bStop = true;
+			}
+			if(generador[(creadorS.getChildAt(3).y / 20) + 1] == 1){
+					trace("s4");
+					bStop = true;
+			}
 			
-			if((v1y + indY) > 23){
+			//Una pieza ha llegado a la base del escenario
+			if(indY > limite || bStop == true){
+				//Se toman las coordenadas en donde cayo la pieza para ubicarla en la matriz
+				//Ubicacion en Y - fila
+				f1y = creadorS.getChildAt(0).y / 20;
+				f2y = creadorS.getChildAt(1).y / 20;
+				f3y = creadorS.getChildAt(2).y / 20;
+				f4y = creadorS.getChildAt(3).y / 20;
+				//Ubicacion en X - columna
+				f1x = creadorS.getChildAt(0).x / 20;
+				f2x = creadorS.getChildAt(1).x / 20;
+				f3x = creadorS.getChildAt(2).x / 20;
+				f4x = creadorS.getChildAt(3).x / 20;
+				
+				//Se detiene la caida y se actualiza la matriz
 				speed.stop();
-				indY = 0;
+				ActualizarMatriz();
 			}
-			else if((v2y + indY) > 23){
-				speed.stop();
-				indY = 0;
-			}
-			else if((v3y + indY) > 23){
-				speed.stop();
-				indY = 0;
-			}
-			else{
-				if((v4y + indY) > 23){
-					speed.stop();
-					indY = 0;
+		}
+		
+		//Funcion para actualizar la matriz y eliminar sobrnates
+		private function ActualizarMatriz(){
+			//Se eliminan 1 sobrantes en la parte superior de la matriz
+			for(var er:int = 0; er < 4; er++){
+				for(var rr:int = 0; rr < 15; rr++){
+					generador[er][rr] = 0;
 				}
 			}
 			
-			Dibujar();
-		}
-		
-		//ACTUALIZAR EL ESCENARIO
-		//Se reincia la matriz antes de cargar nuevos valores
-		private function Actualizar(){
-			 generador = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-						  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
+			//Muestra la matriz en consola
+			for(var es:int = 0; es < 25; es++){
+				trace(generador[ed]);
+			}
+			trace("\n");
+			
+			//Se dibuja la figura en la matriz, en base en donde cayo
+			actualMat[f1y][f1x] = 1;
+			actualMat[f2y][f2x] = 1;
+			actualMat[f3y][f3x] = 1;
+			actualMat[f4y][f4x] = 1;
+			
+			//Muestra la matriz en consola
+			for(var ed:int = 0; ed < 25; ed++){
+				trace(actualMat[ed]);
+			}
+			trace("\n");
+			
+			//Se reinicia el proceso de la pieza
+			Pieza();
 		}
 		
 		//GENERADOR DE FISICA DEL JUEGO
