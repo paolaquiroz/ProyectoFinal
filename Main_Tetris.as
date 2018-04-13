@@ -151,7 +151,6 @@
 			stage.addEventListener(Event.ENTER_FRAME, Movimeinto);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, Presionar);
 			stage.addEventListener(KeyboardEvent.KEY_UP, Soltar);
-			stage.addEventListener(Event.ENTER_FRAME, Fisica);
 		}
 		
 		function Fregresar (event:MouseEvent):void{
@@ -273,7 +272,7 @@
 			ind = 0;
 			
 			//LEER FILAS
-			for(var a:int = 0; a < 25; a++){
+			for(var a:int = 0; a < 4; a++){
 				//LEER COLUMNAS
 				for(var b:int = 0; b < 15; b++){
 					
@@ -299,9 +298,15 @@
 				posX = 0;
 				posY++;
 			}
-			speed.start();
-			speed.addEventListener(TimerEvent.TIMER, Caida);
 			
+			generador[v1y][v1x] = 0;
+			generador[v2y][v2x] = 0;
+			generador[v3y][v3x] = 0;
+			generador[v4y][v4x] = 0;
+			
+			speed.start();
+			stage.addEventListener(Event.ENTER_FRAME, Fisica);
+			speed.addEventListener(TimerEvent.TIMER, Caida);
 		}
 		
 		//MOVIMIENTO DE LA PIEZA
@@ -383,6 +388,10 @@
 		}
 		
 		private function Detener(){
+			stage.removeEventListener(Event.ENTER_FRAME, Fisica);
+			//Se detiene la caida
+			speed.stop();
+			
 			//Se toman las coordenadas en donde cayo la pieza para ubicarla en la matriz
 			//Ubicacion en Y - fila
 			f1y = creadorS.getChildAt(0).y / 20;
@@ -394,31 +403,25 @@
 			f2x = creadorS.getChildAt(1).x / 20;
 			f3x = creadorS.getChildAt(2).x / 20;
 			f4x = creadorS.getChildAt(3).x / 20;
+			
+			if(f1y < 5 || f2y < 5 || f3y < 5 || f4y < 5){
+				trace("perdiste");
 				
-			//Se detiene la caida y se actualiza la matriz
-			speed.stop();
-			ActualizarMatriz();
+			}
+			
+			//Se actualiza la matriz
+			var delay:Timer = new Timer(300, 1);
+			delay.start();
+			delay.addEventListener(TimerEvent.TIMER_COMPLETE, ActualizarMatriz);
 		}
 		
 		//Funcion para actualizar la matriz y eliminar sobrnates
-		private function ActualizarMatriz(){
-			//Se eliminan 1 sobrantes en la parte superior de la matriz
-			for(var er:int = 0; er < 5; er++){
-				for(var rr:int = 0; rr < 15; rr++){
-					generador[er][rr] = 0;
-				}
-			}
-			
+		private function ActualizarMatriz(event:TimerEvent){
+			//Se cuentan las piezas que hay en el escenario
 			numPiezas++;
 			trace("Pieza:" + numPiezas);
 			
 			//Se reinicia el proceso de la pieza
-			var delay:Timer = new Timer(200, 1);
-			delay.start();
-			delay.addEventListener(TimerEvent.TIMER_COMPLETE, Continuar);
-		}
-		
-		private function Continuar(event:TimerEvent){
 			Pieza();
 		}
 		
@@ -453,95 +456,150 @@
 			var der4X:Number = Number((creadorS.getChildAt(3).x / 20) + 1);
 			var izq4X:Number = Number((creadorS.getChildAt(3).x / 20) - 1);
 			
+			//trace("v1: " + lectura1Y + ", v2: " + lectura2Y + ", v3: " + lectura3Y + ", v4: " + lectura4Y);
 			//trace("v1: " + der1X + ", v2: " + der2X + ", v3: " + der3X + ", v4: " + der4X);
 			//trace("v1: " + fisica1Y + ", v2: " + fisica2Y + ", v3: " + fisica3Y + ", v4: " + fisica4Y);
 			
-			if(numPiezas > 1){
-				switch(select){
-					case 1: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
-						Detener();
-					}
-					
-					if(generador[fisica1Y][der1X] == 1 || generador[fisica2Y][der2X] == 1 || generador[fisica3Y][der3X] == 1){
-						block = true;
-					}
-					else{
-						block = false;
-					}
-					break;
-					
-					case 2: if(generador[lectura1Y][lectura1X] == 1 || generador[lectura2Y][lectura2X] == 1){
-						Detener();
-					}
-					
-					if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
-						block = true;
-					}
-					else{
-						block = false;
-					}
-					break;
-					
-					case 3: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
-						Detener();
-					}
-					
-					if(generador[fisica2Y][der2X] == 1 || generador[fisica4Y][der4X] == 1){
-						block = true;
-					}
-					else{
-						block = false;
-					}
-					break;
-					
-					case 4: if(generador[lectura4Y][lectura4X] == 1){
-						Detener();
-					}
-					
-					if(generador[fisica1Y][der1X] == 1 || generador[fisica2Y][der2X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
-						block = true;
-					}
-					else{
-						block = false;
-					}
-					break;
-					
-					case 5: if(generador[lectura2Y][lectura2X] == 1 || generador[lectura4Y][lectura4X] == 1){
-						Detener();
-					}
-					
-					if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
-						block = true;
-					}
-					else{
-						block = false;
-					}
-					break;
-					
-					case 6: if(generador[lectura1Y][lectura1X] == 1 || generador[lectura3Y][lectura3X] == 1){
-						Detener();
-					}
-					
-					if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
-						block = true;
-					}
-					else{
-						block = false;
-					}
-					break;
-					
-					case 7: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
-						Detener();
-					}
-					
-					if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
-						block = true;
-					}
-					else{
-						block = false;
-					}
-					break;
+			switch(select){
+				case 1: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+					Detener();
 				}
+				
+				/*if(generador[fisica1Y][der1X] == 1 || generador[fisica2Y][der2X] == 1 || generador[fisica3Y][der3X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}
+				
+				if(generador[fisica1Y][izq1X] == 1 || generador[fisica2Y][izq2X] == 1 || generador[fisica4Y][izq4X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}*/
+				
+				break;
+				
+				case 2: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+					Detener();
+				}
+				
+				/*if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}
+				
+				if(generador[fisica2Y][izq2X] == 1 || generador[fisica3Y][izq3X] == 1 || generador[fisica4Y][izq4X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}*/
+				
+				break;
+				
+				case 3: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+					Detener();
+				}
+				
+				/*if(generador[fisica2Y][der2X] == 1 || generador[fisica4Y][der4X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}
+				
+				if(generador[fisica1Y][izq1X] == 1 || generador[fisica3Y][izq3X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}*/
+				
+				break;
+				
+				case 4: if(generador[lectura4Y][lectura4X] == 1){
+					Detener();
+				}
+				
+				/*if(generador[fisica1Y][der1X] == 1 || generador[fisica2Y][der2X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}
+				
+				if(generador[fisica1Y][izq1X] == 1 || generador[fisica2Y][izq2X] == 1 || generador[fisica3Y][izq3X] || generador[fisica4Y][izq4X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}*/
+				
+				break;
+				
+				case 5: if(generador[lectura2Y][lectura2X] == 1 || generador[lectura4Y][lectura4X] == 1){
+					Detener();
+				}
+				
+				/*if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}
+				
+				if(generador[fisica1Y][izq1X] == 1 || generador[fisica2Y][izq2X] == 1 || generador[fisica4Y][izq4X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}*/
+				
+				break;
+				
+				case 6: if(generador[lectura2Y][lectura2X] == 1 || generador[lectura3Y][lectura3X] == 1){
+					Detener();
+				}
+				
+				/*if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}
+				
+				if(generador[fisica1Y][izq1X] == 1 || generador[fisica2Y][izq2X] == 1 || generador[fisica4Y][izq4X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}*/
+				
+				break;
+				
+				case 7: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+					Detener();
+				}
+				
+				/*if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}
+				
+				if(generador[fisica1Y][izq1X] == 1 || generador[fisica2Y][izq2X] == 1 || generador[fisica3Y][izq3X] == 1){
+					block = true;
+				}
+				else{
+					block = false;
+				}*/
+				
+				break;
 			}
 		}
 	}
