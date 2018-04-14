@@ -7,6 +7,7 @@
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.events.KeyboardEvent;
+	import flash.net.LocalConnection;
 	
 	public class Main_Tetris extends MovieClip{
 		//VARIABLES
@@ -94,7 +95,7 @@
 			regresar_btn.addEventListener(MouseEvent.CLICK,Fregresar);
 			dos_btn.enabled=false;
 			jugar_btn.visible=false;
-			regresar_btn.visible=false;
+			regresar_btn.visible=false;s
 			jugadores.visible=false;
 			j1.visible=false;
 			j2.visible=false;
@@ -112,6 +113,12 @@
 				nombres_txt.text="";
 				dos_btn.enabled=true;
 			}
+			
+	
+			
+			
+			
+			
 		}
 		//2° JUGADORES
 		function Fdos(event:MouseEvent):void{
