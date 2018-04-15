@@ -146,8 +146,13 @@
 			gotoAndPlay(3);
 			timer.start();														//el timer se inicia cuando
 			timer.addEventListener(TimerEvent.TIMER,Ftiempo);					//se entra al frame
-			nombre.text=String(nombresArray[cont]);
-			
+			resultados.visible=false;
+			resultados_mc.visible=false;
+			perdiste.visible=false;
+			n1.visible=false;
+			n2.visible=false;
+			r1.visible=false;
+			r2.visible=false;
 			//Crear el Sprite del escenario
 			creadorS.graphics.drawRect(0, 0, 300, 500);
 			addChild(creadorS);
@@ -399,6 +404,7 @@
 			//Se detiene la caida
 			speed.stop();
 			
+			
 			//Se toman las coordenadas en donde cayo la pieza para ubicarla en la matriz
 			//Ubicacion en Y - fila
 			f1y = creadorS.getChildAt(0).y / 20;
@@ -413,13 +419,21 @@
 			
 			if(f1y < 5 || f2y < 5 || f3y < 5 || f4y < 5){
 				trace("perdiste");
-				
+				timer.stop();
+				perdiste.visible=true;
+				resultados.visible=true;
+				n1.text=String(nombresArray[0]);
+				n2.text=String(nombresArray[1]);
+				removeChild(atomoM);
+				removeChild(creadorS);
 			}
 			
 			//Se actualiza la matriz
 			var delay:Timer = new Timer(300, 1);
 			delay.start();
 			delay.addEventListener(TimerEvent.TIMER_COMPLETE, ActualizarMatriz);
+			
+			
 		}
 		
 		//Funcion para actualizar la matriz y eliminar sobrnates
