@@ -19,6 +19,7 @@
 		var cont:int=0;
 		//PRINCIPALES
 		var select:int;
+		var mostrar:int;
 		var limite:int = 0;
 		var speed:Timer = new Timer(500, limite);
 		var f1y:int;
@@ -66,6 +67,7 @@
 		var der:Boolean = false;
 		var arr:Boolean = false;
 		var giro:int = 0;
+		var ban:int = 0;
 		//CAIDA
 		var numPiezas:int = 1;
 		var ind:int = 0;
@@ -80,6 +82,7 @@
 		var v2x:int;
 		var v3x:int;
 		var v4x:int;
+		var block:Boolean = false;
 		
 		//Funcion Inicial
 		public function Main_Tetris() {
@@ -158,6 +161,7 @@
 			addChild(creadorS);
 			
 			//Iniciar creacion de la pieza
+			mostrar = Math.random() * 7 + 1;
 			Pieza();
 			
 			stage.addEventListener(Event.ENTER_FRAME, Movimeinto);
@@ -196,8 +200,8 @@
 		//GENERADOR DE PIEZAS
 		private function Pieza(){
 			//Generar un numero aleatorio
-			select = Math.random() * 7 + 1;
-			trace("seleccion: " + select);
+			select = mostrar;
+			trace("seleccion: " + select + ", " + mostrar);
 			
 			//En base al numero, generar la pieza correspondiente
 			switch(select){
@@ -272,7 +276,11 @@
 			
 			indX = 0;
 			indY = 0;
+			giro = 0;
 			block = false;
+			
+			//Generar el numero aleatorio
+			mostrar = Math.random() * 7 + 1;
 			
 			Dibujar();
 		}
@@ -317,24 +325,25 @@
 			generador[v4y][v4x] = 0;
 			
 			speed.start();
-			stage.addEventListener(Event.ENTER_FRAME, Fisica);
+			stage.addEventListener(Event.ENTER_FRAME, Colision);
 			speed.addEventListener(TimerEvent.TIMER, Caida);
 		}
 		
 		//MOVIMIENTO DE LA PIEZA
 		private function Presionar(event:KeyboardEvent){
-			//Determinar la tecla izquierda: ASCII no. 37
-			if(event.keyCode == 37){
+			//Determinar la tecla A: ASCII no. 65
+			if(event.keyCode == 65){
 				//Esta presionado
 				izq = true;
 			}
 			else{
-				//Determinar la tecla derecha: ASCII no. 39
-				if(event.keyCode == 39){
+				//Determinar la tecla D: ASCII no. 68
+				if(event.keyCode == 68){
 					der = true;
 				}
 				else{
-					if(event.keyCode == 38){
+					//Determinar la tecla W: ASCII no. 87
+					if(event.keyCode == 87){
 						arr = true;
 					}
 				}
@@ -342,19 +351,21 @@
 		}
 		
 		private function Soltar(event:KeyboardEvent){
-			//Determinar la tecla izquierda: ASCII no. 37
-			if(event.keyCode == 37){
+			//Determinar la tecla A: ASCII no. 65
+			if(event.keyCode == 65){
 				//Esta presionado
 				izq = false;
 			}
 			else{
-				//Determinar la tecla derecha: ASCII no. 39
-				if(event.keyCode == 39){
+				//Determinar la tecla D: ASCII no. 68
+				if(event.keyCode == 68){
 					der = false;
 				}
 				else{
-					if(event.keyCode == 38){
+					//Determinar la tecla W: ASCII no. 87
+					if(event.keyCode == 87){
 						arr = false;
+						ban = 0;
 					}
 				}
 			}
@@ -362,13 +373,26 @@
 		
 		//Funcion de Movimiento
 		private function Movimeinto(event:Event){
-			if(izq == true && indX > -7 && block == false){
-				indX--;
-				
-				for(control = 0; control < 4; control++){
-					creadorS.getChildAt(control).x -= 20;
+			//Accion de movimiento a la izquierda
+			if(select == 4){
+				if(izq == true && indX > -8 && block == false){
+					indX--;
+					
+					for(control = 0; control < 4; control++){
+						creadorS.getChildAt(control).x -= 20;
+					}
 				}
 			}
+			else{
+				if(izq == true && indX > -7 && block == false){
+					indX--;
+					
+					for(control = 0; control < 4; control++){
+						creadorS.getChildAt(control).x -= 20;
+					}
+				}
+			}
+			//Accion de movimiento a la derecha
 			if(der == true && indX < 6 && block == false){
 				indX++;
 				
@@ -377,12 +401,313 @@
 				}
 			}
 			
+			//Accion del giro al presionar la tecla hacia arriba
 			if(arr == true){
+				if(ban == 0){
+					giro++;
+					Rotacion();
+				}
+				ban = 1;
 				
+				switch(select){
+					case 1: 
+						if(giro > 3){
+							giro = 0;
+						}
+					break;
+					case 2: 
+						if(giro > 3){
+							giro = 0;
+						}
+					break;
+					case 3: 
+						if(giro > 0){
+							giro = 0;
+						}
+					break;
+					case 4: 
+						if(giro > 1){
+							giro = 0;
+						}
+					break;
+					case 5: 
+						if(giro > 1){
+							giro = 0;
+						}
+					break;
+					case 6: 
+						if(giro > 1){
+							giro = 0;
+						}
+					break;
+					case 7: 
+						if(giro > 3){
+							giro = 0;
+						}
+					break;
+				}
 			}
 		}
 		
-		var block:Boolean = false;
+		//Funcion que genera la rotacion de cada pieza
+		/*Se realiza el gior en base a la pieza que cae y el valor de giro*/
+		private function Rotacion(){
+			speed.stop();
+			switch(select){
+				case 1:
+				switch(giro){
+					case 1: 
+					trace("s1");
+					creadorS.getChildAt(0).y += 20;
+					creadorS.getChildAt(0).x -= 20;
+					
+					creadorS.getChildAt(2).y -= 20;
+					creadorS.getChildAt(2).x += 20;
+					
+					creadorS.getChildAt(3).y -= 40;
+					
+					limite = 22;
+					break;
+					case 2: 
+					trace("s2");
+					creadorS.getChildAt(0).y += 20;
+					creadorS.getChildAt(0).x += 20;
+					
+					creadorS.getChildAt(2).y -= 20;
+					creadorS.getChildAt(2).x -= 20;
+					
+					creadorS.getChildAt(3).x -= 40;
+					
+					limite = 21;
+					break;
+					case 3: 
+					trace("s3");
+					creadorS.getChildAt(0).y -= 20;
+					creadorS.getChildAt(0).x += 20;
+					
+					creadorS.getChildAt(2).y += 20;
+					creadorS.getChildAt(2).x -= 20;
+					
+					creadorS.getChildAt(3).y += 40;
+					
+					limite = 21;
+					break;
+					case 4: 
+					trace("s4");
+					creadorS.getChildAt(0).y -= 20;
+					creadorS.getChildAt(0).x -= 20;
+					
+					creadorS.getChildAt(2).y += 20;
+					creadorS.getChildAt(2).x += 20;
+					
+					creadorS.getChildAt(3).x += 40;
+					
+					limite = 21;
+					break;
+				}
+				break;
+				
+				case 2:
+				switch(giro){
+					case 1: 
+					trace("s1");
+					creadorS.getChildAt(0).y += 20;
+					creadorS.getChildAt(0).x -= 20;
+					
+					creadorS.getChildAt(3).y -= 20;
+					creadorS.getChildAt(3).x += 20;
+					
+					creadorS.getChildAt(2).x += 40;
+					
+					limite = 21;
+					break;
+					case 2: 
+					trace("s2");
+					creadorS.getChildAt(0).y += 20;
+					creadorS.getChildAt(0).x += 20;
+					
+					creadorS.getChildAt(3).y -= 20;
+					creadorS.getChildAt(3).x -= 20;
+					
+					creadorS.getChildAt(2).y -= 40;
+					
+					limite = 21;
+					break;
+					case 3: 
+					trace("s3");
+					creadorS.getChildAt(0).y -= 20;
+					creadorS.getChildAt(0).x += 20;
+					
+					creadorS.getChildAt(3).y += 20;
+					creadorS.getChildAt(3).x -= 20;
+					
+					creadorS.getChildAt(2).x -= 40;
+					
+					limite = 22;
+					break;
+					case 4: 
+					trace("s4");
+					creadorS.getChildAt(0).y -= 20;
+					creadorS.getChildAt(0).x -= 20;
+					
+					creadorS.getChildAt(3).y += 20;
+					creadorS.getChildAt(3).x += 20;
+					
+					creadorS.getChildAt(2).y += 40;
+					
+					limite = 21;
+					break;
+				}
+				break;
+				
+				case 4:
+				switch(giro){
+					case 1: 
+					trace("s1");
+					creadorS.getChildAt(0).y += 20;
+					creadorS.getChildAt(0).x -= 20;
+					
+					creadorS.getChildAt(2).y -= 20;
+					creadorS.getChildAt(2).x += 20;
+					
+					creadorS.getChildAt(3).y -= 40;
+					creadorS.getChildAt(3).x += 40;
+					
+					limite = 22;
+					break;
+					case 2: 
+					trace("s2");
+					creadorS.getChildAt(0).y -= 20;
+					creadorS.getChildAt(0).x += 20;
+					
+					creadorS.getChildAt(2).y += 20;
+					creadorS.getChildAt(2).x -= 20;
+					
+					creadorS.getChildAt(3).y += 40;
+					creadorS.getChildAt(3).x -= 40
+					
+					limite = 20;
+					break;
+				}
+				break;
+				
+				case 5:
+				switch(giro){
+					case 1: 
+					trace("s1");
+					creadorS.getChildAt(0).y += 20;
+					creadorS.getChildAt(0).x -= 20;
+					
+					creadorS.getChildAt(2).y -= 20;
+					creadorS.getChildAt(2).x -= 20;
+					
+					creadorS.getChildAt(3).y -= 40;
+					
+					limite = 22; 
+					break;
+					case 2: 
+					trace("s2");
+					creadorS.getChildAt(0).y -= 20;
+					creadorS.getChildAt(0).x += 20;
+					
+					creadorS.getChildAt(2).y += 20;
+					creadorS.getChildAt(2).x += 20;
+					
+					creadorS.getChildAt(3).y += 40;
+					
+					limite = 20;
+					break;
+				}
+				break;
+				
+				case 6:
+				switch(giro){
+					case 1: 
+					trace("s1");
+					creadorS.getChildAt(0).x -= 40;
+					
+					creadorS.getChildAt(2).y -= 20;
+					creadorS.getChildAt(2).x -= 20;
+					
+					creadorS.getChildAt(3).y -= 20;
+					creadorS.getChildAt(3).x += 20;
+					
+					limite = 22; 
+					break;
+					case 2: 
+					trace("s2");
+					creadorS.getChildAt(0).x += 40;
+					
+					creadorS.getChildAt(2).y += 20;
+					creadorS.getChildAt(2).x += 20;
+					
+					creadorS.getChildAt(3).y += 20;
+					creadorS.getChildAt(3).x -= 20;
+					
+					limite = 20;
+					break;
+				}
+				break;
+				
+				case 7:
+				switch(giro){
+					case 1: 
+					trace("s1");
+					creadorS.getChildAt(0).y += 20;
+					creadorS.getChildAt(0).x -= 20;
+					
+					creadorS.getChildAt(2).y -= 20;
+					creadorS.getChildAt(2).x -= 20;
+					
+					creadorS.getChildAt(3).y -= 20;
+					creadorS.getChildAt(3).x += 20;
+					
+					limite = 22;
+					break;
+					case 2: 
+					trace("s2");
+					creadorS.getChildAt(0).y += 20;
+					creadorS.getChildAt(0).x += 20;
+					
+					creadorS.getChildAt(2).y += 20;
+					creadorS.getChildAt(2).x -= 20;
+					
+					creadorS.getChildAt(3).y -= 20;
+					creadorS.getChildAt(3).x -= 20;
+					
+					limite = 21;
+					break;
+					case 3: 
+					trace("s3");
+					creadorS.getChildAt(0).y -= 20;
+					creadorS.getChildAt(0).x += 20;
+					
+					creadorS.getChildAt(2).y += 20;
+					creadorS.getChildAt(2).x += 20;
+					
+					creadorS.getChildAt(3).y += 20;
+					creadorS.getChildAt(3).x -= 20;
+					
+					limite = 21;
+					break;
+					case 4: 
+					trace("s4");
+					creadorS.getChildAt(0).y -= 20;
+					creadorS.getChildAt(0).x -= 20;
+					
+					creadorS.getChildAt(2).y -= 20;
+					creadorS.getChildAt(2).x += 20;
+					
+					creadorS.getChildAt(3).y += 20;
+					creadorS.getChildAt(3).x += 20;
+					
+					limite = 21;
+					break;
+				}
+				break;
+			}
+			speed.start();
+		}
 		
 		//CAIDA DE LAS PIEZAS
 		private function Caida(event:TimerEvent){
@@ -400,7 +725,7 @@
 		}
 		
 		private function Detener(){
-			stage.removeEventListener(Event.ENTER_FRAME, Fisica);
+			stage.removeEventListener(Event.ENTER_FRAME, Colision);
 			//Se detiene la caida
 			speed.stop();
 			
@@ -417,6 +742,7 @@
 			f3x = creadorS.getChildAt(2).x / 20;
 			f4x = creadorS.getChildAt(3).x / 20;
 			
+			//Condicion del tope
 			if(f1y < 5 || f2y < 5 || f3y < 5 || f4y < 5){
 				trace("perdiste");
 				timer.stop();
@@ -424,7 +750,12 @@
 				resultados.visible=true;
 				n1.text=String(nombresArray[0]);
 				n2.text=String(nombresArray[1]);
-				removeChild(atomoM);
+				
+				stage.removeEventListener(Event.ENTER_FRAME, Movimeinto);
+				stage.removeEventListener(KeyboardEvent.KEY_DOWN, Presionar);
+				stage.removeEventListener(KeyboardEvent.KEY_UP, Soltar);
+				stage.removeEventListener(Event.ENTER_FRAME, Colision);
+				
 				removeChild(creadorS);
 			}
 			
@@ -447,7 +778,7 @@
 		}
 		
 		//GENERADOR DE FISICA DEL JUEGO
-		private function Fisica(event:Event){
+		private function Colision(event:Event){
 			//v1
 			var lectura1Y:Number = Number((creadorS.getChildAt(0).y / 20) + 1);
 			var lectura1X:Number = Number((creadorS.getChildAt(0).x / 20));
@@ -481,144 +812,168 @@
 			//trace("v1: " + der1X + ", v2: " + der2X + ", v3: " + der3X + ", v4: " + der4X);
 			//trace("v1: " + fisica1Y + ", v2: " + fisica2Y + ", v3: " + fisica3Y + ", v4: " + fisica4Y);
 			
+			//Detectore de colision entre piezas segun la pieza y el giro
 			switch(select){
-				case 1: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
-					Detener();
+				case 1: 
+				switch(giro){
+					case 0: 
+						if(generador[lectura1Y][lectura1X] == 1 || generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 1: 
+						if(generador[lectura1Y][lectura1X] == 1 || generador[lectura2Y][lectura2X] == 1 || generador[lectura3Y][lectura3X] == 1){
+							Detener();
+						}
+					break;
+					case 2: 
+						if(generador[lectura2Y][lectura2X] == 1 || generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 3: 
+						if(generador[lectura1Y][lectura1X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 4: 
+						if(generador[lectura1Y][lectura1X] == 1 || generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
 				}
-				
-				/*if(generador[fisica1Y][der1X] == 1 || generador[fisica2Y][der2X] == 1 || generador[fisica3Y][der3X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}
-				
-				if(generador[fisica1Y][izq1X] == 1 || generador[fisica2Y][izq2X] == 1 || generador[fisica4Y][izq4X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}*/
 				
 				break;
 				
-				case 2: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
-					Detener();
+				case 2: 
+				switch(giro){
+					case 0: 
+						if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 1: 
+						if(generador[lectura1Y][lectura1X] || generador[lectura2Y][lectura2X] == 1 || generador[lectura3Y][lectura3X] == 1){
+							Detener();
+						}
+					break;
+					case 2: 
+						if(generador[lectura1Y][lectura1X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 3: 
+						if(generador[lectura1Y][lectura1X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 4: 
+						if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
 				}
-				
-				/*if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}
-				
-				if(generador[fisica2Y][izq2X] == 1 || generador[fisica3Y][izq3X] == 1 || generador[fisica4Y][izq4X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}*/
 				
 				break;
 				
-				case 3: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+				case 3: 
+				if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
 					Detener();
 				}
-				
-				/*if(generador[fisica2Y][der2X] == 1 || generador[fisica4Y][der4X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}
-				
-				if(generador[fisica1Y][izq1X] == 1 || generador[fisica3Y][izq3X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}*/
 				
 				break;
 				
-				case 4: if(generador[lectura4Y][lectura4X] == 1){
-					Detener();
+				case 4: 
+				switch(giro){
+					case 0: 
+						if(generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 1: 
+						if(generador[lectura1Y][lectura1X] || generador[lectura2Y][lectura2X] == 1 || generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 2: 
+						if(generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
 				}
-				
-				/*if(generador[fisica1Y][der1X] == 1 || generador[fisica2Y][der2X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}
-				
-				if(generador[fisica1Y][izq1X] == 1 || generador[fisica2Y][izq2X] == 1 || generador[fisica3Y][izq3X] || generador[fisica4Y][izq4X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}*/
 				
 				break;
 				
-				case 5: if(generador[lectura2Y][lectura2X] == 1 || generador[lectura4Y][lectura4X] == 1){
-					Detener();
+				case 5: 
+				switch(giro){
+					case 0: 
+						if(generador[lectura2Y][lectura2X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 1: 
+						if(generador[lectura1Y][lectura1X] || generador[lectura2Y][lectura2X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 2: 
+						if(generador[lectura2Y][lectura2X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
 				}
-				
-				/*if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}
-				
-				if(generador[fisica1Y][izq1X] == 1 || generador[fisica2Y][izq2X] == 1 || generador[fisica4Y][izq4X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}*/
 				
 				break;
 				
-				case 6: if(generador[lectura2Y][lectura2X] == 1 || generador[lectura3Y][lectura3X] == 1){
-					Detener();
+				case 6: 
+				switch(giro){
+					case 0: 
+						if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 1: 
+						if(generador[lectura1Y][lectura1X] || generador[lectura2Y][lectura2X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 2: 
+						if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
 				}
-				
-				/*if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}
-				
-				if(generador[fisica1Y][izq1X] == 1 || generador[fisica2Y][izq2X] == 1 || generador[fisica4Y][izq4X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}*/
 				
 				break;
 				
-				case 7: if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
-					Detener();
+				case 7: 
+				switch(giro){
+					case 0: 
+						if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 1: 
+						if(generador[lectura1Y][lectura1X] || generador[lectura2Y][lectura2X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 2: 
+						if(generador[lectura1Y][lectura1X] == 1 || generador[lectura3Y][lectura3X] == 1){
+							Detener();
+						}
+					break;
+					case 3: 
+						if(generador[lectura1Y][lectura1X] == 1 || generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
+					case 4: 
+						if(generador[lectura3Y][lectura3X] == 1 || generador[lectura4Y][lectura4X] == 1){
+							Detener();
+						}
+					break;
 				}
-				
-				/*if(generador[fisica1Y][der1X] == 1 || generador[fisica3Y][der3X] == 1 || generador[fisica4Y][der4X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}
-				
-				if(generador[fisica1Y][izq1X] == 1 || generador[fisica2Y][izq2X] == 1 || generador[fisica3Y][izq3X] == 1){
-					block = true;
-				}
-				else{
-					block = false;
-				}*/
 				
 				break;
 			}
