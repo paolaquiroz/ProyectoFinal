@@ -20,6 +20,7 @@
 		//PRINCIPALES
 		var select:int;
 		var mostrar:int;
+		var piezaSig:Mostrador = new Mostrador;
 		var limite:int = 0;
 		var speed:Timer = new Timer(500, limite);
 		var f1y:int;
@@ -60,6 +61,11 @@
 		var atomoM:DisplayObject;
 		var atomo1:Atomo1;
 		var atomo2:Atomo2;
+		var atomo3:Atomo3;
+		var atomo4:Atomo4;
+		var atomo5:Atomo5;
+		var atomo6:Atomo6;
+		var color:int;
 		var posX:Number;
 		var posY:Number;
 		//MOVIMIENTO Y GIRO
@@ -88,6 +94,8 @@
 		var linea:int = 0;
 		var semilinea:int = 0;
 		var lineasJ:Array = [];
+		var filaB:int;
+		var borrar:Boolean = false;
 		
 		//Funcion Inicial
 		public function Main_Tetris() {
@@ -206,7 +214,6 @@
 		private function Pieza(){
 			//Generar un numero aleatorio
 			select = mostrar;
-			trace("seleccion: " + select + ", " + mostrar);
 			
 			//En base al numero, generar la pieza correspondiente
 			switch(select){
@@ -292,11 +299,13 @@
 			indY = 0;
 			giro = 0;
 			filaB = 0;
+			linea = 0;
 			semilinea = 0;
 			borrar = false;
 			
 			//Generar el numero aleatorio
 			mostrar = Math.random() * 7 + 1;
+			piezaSig.Seleccionado(mostrar);
 			
 			Dibujar();
 		}
@@ -307,17 +316,22 @@
 			posY = 0;
 			ind = 0;
 			
+			//Seleccion de color aleatorio
+			color = Math.random() * 6 + 1;
+			
 			//LEER FILAS
 			for(var a:int = 0; a < 4; a++){
 				//LEER COLUMNAS
 				for(var b:int = 0; b < 15; b++){
 					
 					//Seleccion del color de la pieza
-					if(select == 1 || select == 3 || select == 5 || select == 7){
-						atomoM = atomo1 = new Atomo1;
-					}
-					else{
-						atomoM = atomo2 = new Atomo2;
+					switch(color){
+						case 1: atomoM = atomo1 = new Atomo1; break;
+						case 2: atomoM = atomo2 = new Atomo2; break;
+						case 3: atomoM = atomo3 = new Atomo3; break;
+						case 4: atomoM = atomo4 = new Atomo4; break;
+						case 5: atomoM = atomo5 = new Atomo5; break;
+						case 6: atomoM = atomo6 = new Atomo6; break;
 					}
 					
 					//DIBUJAR SOBRE EL ESCENARIO
@@ -767,8 +781,8 @@
 				timer.stop();
 				perdiste.visible=true;
 				resultados.visible=true;
-				n1.text=String(nombresArray[0]);
-				n2.text=String(nombresArray[1]);
+				n1.text=String(nombresArray[0] + lineasJ[0]);
+				n2.text=String(nombresArray[1] + lineasJ[1]);
 				
 				stage.removeEventListener(Event.ENTER_FRAME, Movimeinto);
 				stage.removeEventListener(KeyboardEvent.KEY_DOWN, Presionar);
@@ -783,9 +797,6 @@
 			delay.start();
 			delay.addEventListener(TimerEvent.TIMER_COMPLETE, ActualizarMatriz);
 		}
-		
-		var filaB:int;
-		var borrar:Boolean = false;
 		
 		//Funcion para actualizar la matriz y leer las filas completas
 		private function ActualizarMatriz(event:TimerEvent){
@@ -803,7 +814,6 @@
 				//LEER COLUMNAS
 				for(var fb:int = 0; fb < 15; fb++){
 					if(generador[24 - fa][fb] == 1){
-						trace("fila: " + fa + " - " + semilinea);
 						semilinea++;
 					}
 				}
@@ -811,7 +821,7 @@
 				if(semilinea == 15){
 					filaB = 24 - fa;
 					linea++;
-					trace("lineas: " + linea++);
+					lineas.text = linea;
 					borrar = true;
 					Borrar();
 				}
@@ -828,7 +838,7 @@
 		
 		private function Borrar(){
 			var posX2:int = 0;
-			var posY2:int = 25;
+			var posY2:int = filaB;
 			
 			trace("fila a borrar: " + filaB);
 			for(control = 0; control < 15; control++){
@@ -844,6 +854,7 @@
 				posX2++;
 			}
 		}
+		
 		
 		//GENERADOR DE FISICA DEL JUEGO
 		private function Colision(event:Event){
