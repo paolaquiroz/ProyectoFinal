@@ -83,6 +83,11 @@
 		var v3x:int;
 		var v4x:int;
 		var block:Boolean = false;
+		//LINEAS
+		var cuadrito:Cuadrito;
+		var linea:int = 0;
+		var semilinea:int = 0;
+		var lineasJ:Array = [];
 		
 		//Funcion Inicial
 		public function Main_Tetris() {
@@ -255,12 +260,19 @@
 						break;
 			}
 			
+			//Actualizar la matriz con los nuevos datos
 			if(numPiezas > 1){
 				//Se dibuja la figura en la matriz, en base en donde cayo
 				generador[f1y][f1x] = 1;
 				generador[f2y][f2x] = 1;
 				generador[f3y][f3x] = 1;
 				generador[f4y][f4x] = 1;
+				
+				if(borrar == true){
+					for(control = 0; control < 15; control++){
+						generador[filaB][control] = 0;
+					}
+				}
 				
 				//Muestra la matriz en consola
 				for(var ed:int = 0; ed < 25; ed++){
@@ -269,15 +281,19 @@
 				trace("\n");
 			}
 			
+			//Trazar la imagen en la matriz
 			generador[v1y][v1x] = 1;
 			generador[v2y][v2x] = 1;
 			generador[v3y][v3x] = 1;
 			generador[v4y][v4x] = 1;
 			
+			//Reinicio de variables
 			indX = 0;
 			indY = 0;
 			giro = 0;
-			block = false;
+			filaB = 0;
+			semilinea = 0;
+			borrar = false;
 			
 			//Generar el numero aleatorio
 			mostrar = Math.random() * 7 + 1;
@@ -330,6 +346,7 @@
 		}
 		
 		//MOVIMIENTO DE LA PIEZA
+		//Se presiona una tecla
 		private function Presionar(event:KeyboardEvent){
 			//Determinar la tecla A: ASCII no. 65
 			if(event.keyCode == 65){
@@ -350,6 +367,7 @@
 			}
 		}
 		
+		//Se suelta una tecla
 		private function Soltar(event:KeyboardEvent){
 			//Determinar la tecla A: ASCII no. 65
 			if(event.keyCode == 65){
@@ -615,7 +633,7 @@
 					
 					creadorS.getChildAt(3).y += 40;
 					
-					limite = 20;
+					limite = 21;
 					break;
 				}
 				break;
@@ -644,7 +662,7 @@
 					creadorS.getChildAt(3).y += 20;
 					creadorS.getChildAt(3).x -= 20;
 					
-					limite = 20;
+					limite = 21;
 					break;
 				}
 				break;
@@ -710,6 +728,7 @@
 		}
 		
 		//CAIDA DE LAS PIEZAS
+		//Funcion de caida
 		private function Caida(event:TimerEvent){
 			indY++;
 			
@@ -724,11 +743,11 @@
 			}
 		}
 		
+		//Funcion para detener la caida de las piezas
 		private function Detener(){
 			stage.removeEventListener(Event.ENTER_FRAME, Colision);
 			//Se detiene la caida
 			speed.stop();
-			
 			
 			//Se toman las coordenadas en donde cayo la pieza para ubicarla en la matriz
 			//Ubicacion en Y - fila
@@ -763,18 +782,67 @@
 			var delay:Timer = new Timer(300, 1);
 			delay.start();
 			delay.addEventListener(TimerEvent.TIMER_COMPLETE, ActualizarMatriz);
-			
-			
 		}
 		
-		//Funcion para actualizar la matriz y eliminar sobrnates
+		var filaB:int;
+		var borrar:Boolean = false;
+		
+		//Funcion para actualizar la matriz y leer las filas completas
 		private function ActualizarMatriz(event:TimerEvent){
+			if(numPiezas > 1){
+				//Se dibuja la figura en la matriz, en base en donde cayo
+				generador[f1y][f1x] = 1;
+				generador[f2y][f2x] = 1;
+				generador[f3y][f3x] = 1;
+				generador[f4y][f4x] = 1;
+			}
+			
+			//Lectura de una fila completa
+			//LEER FILAS
+			for(var fa:int = 0; fa < 21; fa++){
+				//LEER COLUMNAS
+				for(var fb:int = 0; fb < 15; fb++){
+					if(generador[24 - fa][fb] == 1){
+						trace("fila: " + fa + " - " + semilinea);
+						semilinea++;
+					}
+				}
+				//Hay una linea completa
+				if(semilinea == 15){
+					filaB = 24 - fa;
+					linea++;
+					trace("lineas: " + linea++);
+					borrar = true;
+					Borrar();
+				}
+				semilinea = 0;
+			}
+			
 			//Se cuentan las piezas que hay en el escenario
 			numPiezas++;
-			trace("Pieza:" + numPiezas);
 			
 			//Se reinicia el proceso de la pieza
 			Pieza();
+		}
+		
+		
+		private function Borrar(){
+			var posX2:int = 0;
+			var posY2:int = 25;
+			
+			trace("fila a borrar: " + filaB);
+			for(control = 0; control < 15; control++){
+				generador[filaB][control] = 0;
+				
+				if(generador[filaB][control] == 0){
+					cuadrito = new Cuadrito;
+					cuadrito.x = (posX2 * 20);
+					cuadrito.y = (posY2 * 20);
+					creadorS.addChild(cuadrito);
+				}
+				
+				posX2++;
+			}
 		}
 		
 		//GENERADOR DE FISICA DEL JUEGO
@@ -978,5 +1046,6 @@
 				break;
 			}
 		}
+		
 	}
 }
